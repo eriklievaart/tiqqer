@@ -1,0 +1,12 @@
+
+[bundle]
+osgi-status @local @snapshot
+osgi-toolkit @local @snapshot
+toolkit-lang @local @snapshot
+toolkit-logging @local @snapshot
+org.apache.felix.http.jetty org.apache.felix 4.0.6
+org.apache.felix.http.servlet-api org.apache.felix 1.1.2
+
+[provided]
+org.apache.felix.framework org.apache.felix 5.6.10
+
