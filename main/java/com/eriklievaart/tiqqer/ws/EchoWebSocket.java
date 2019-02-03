@@ -18,7 +18,7 @@ public class EchoWebSocket {
 	}
 
 	@OnWebSocketClose
-	public void onClose(Session session) {
+	public void onClose(Session session, int status, String message) {
 		System.out.println("socked closed");
 	}
 
