@@ -75,4 +75,8 @@ public class TiqqerTableModel extends AbstractTableModel {
 		this.data = records;
 		fireTableDataChanged();
 	}
+
+	public LogRecord getRow(int row) {
+		return data.get(row);
+	}
 }

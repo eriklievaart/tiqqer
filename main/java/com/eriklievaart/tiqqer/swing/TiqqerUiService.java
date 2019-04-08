@@ -1,7 +1,10 @@
 package com.eriklievaart.tiqqer.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
@@ -15,7 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
@@ -34,15 +39,22 @@ public class TiqqerUiService implements TiqqerService {
 
 	private final List<LogRecord> records = NewCollection.concurrentList();
 	private final JFrame frame = new JFrameBuilder("tiqqer").title("tiqqer").create();
+	private final JTabbedPane tabs = new JTabbedPane();
+
 	private final TiqqerTableModel model = new TiqqerTableModel();
 	private final JTable table = new JTable(model);
-	private final JPanel panel = new JPanel(new GridLayout(1, 0));
+	private final JPanel overviewPanel = new JPanel(new BorderLayout());
+	private final JPanel buttonPanel = new JPanel(new GridLayout(1, 0));
 	private final JComboBox<LevelType> levelBox = new JComboBox<>(LevelType.values());
 	private final JTextField loggerField = new JTextField();
 	private final JTextField messageField = new JTextField();
 	private final JButton updateButton = new JButton("update");
 	private final JButton clearButton = new JButton("clear");
 	private final AtomicReference<Predicate<LogRecord>> predicate = new AtomicReference<>(r -> true);
+
+	private final JPanel detailPanel = new JPanel(new BorderLayout());
+	private final JTextArea detailArea = new JTextArea();
+	private final TiqqerTableMouseListener listener = new TiqqerTableMouseListener(model, tabs, detailArea);
 
 	@Override
 	public void publish(LogRecord record) {
@@ -55,20 +67,43 @@ public class TiqqerUiService implements TiqqerService {
 
 	public void show() {
 		SwingThread.invokeLater(() -> {
-			clearButton.addActionListener(ae -> clear());
-			frame.getContentPane().add(clearButton, BorderLayout.NORTH);
+			initOverviewPanel();
+			initDetailPanel();
 
-			table.getColumnModel().getColumn(0).setMaxWidth(60);
-			table.setFillsViewportHeight(true);
-			frame.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
-
-			configureButtonPanel();
-			frame.getContentPane().add(panel, BorderLayout.SOUTH);
-			frame.getRootPane().setDefaultButton(updateButton);
+			frame.getContentPane().add(tabs, BorderLayout.CENTER);
+			tabs.addTab("overview", overviewPanel);
+			tabs.addTab("details", detailPanel);
 
 			frame.setBounds(0, 0, 800, 600);
 			frame.setVisible(true);
 		});
+	}
+
+	private void initDetailPanel() {
+		detailPanel.add(new JScrollPane(detailArea));
+		detailArea.setBackground(Color.BLACK);
+		detailArea.setForeground(Color.GRAY);
+		detailArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					tabs.setSelectedIndex(0);
+				}
+			}
+		});
+	}
+
+	private void initOverviewPanel() {
+		initButtonPanel();
+
+		table.setBackground(Color.BLACK);
+		table.getColumnModel().getColumn(0).setMaxWidth(60);
+		table.setFillsViewportHeight(true);
+		table.addMouseListener(listener);
+		table.setDefaultRenderer(Object.class, new ColorRenderer(model));
+
+		overviewPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+		overviewPanel.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 	private void clear() {
@@ -76,13 +111,16 @@ public class TiqqerUiService implements TiqqerService {
 		updateRows();
 	}
 
-	private void configureButtonPanel() {
+	private void initButtonPanel() {
 		levelBox.setSelectedItem(LevelType.TRACE);
 		addBorderedField("minimum level", levelBox);
 		addBorderedField("logger", loggerField);
 		addBorderedField("message", messageField);
+
+		clearButton.addActionListener(ae -> clear());
 		updateButton.addActionListener(ae -> updatePredicate());
-		panel.add(updateButton);
+		buttonPanel.add(updateButton);
+		buttonPanel.add(clearButton);
 	}
 
 	private void updatePredicate() {
@@ -110,7 +148,7 @@ public class TiqqerUiService implements TiqqerService {
 	private void addBorderedField(String label, JComponent field) {
 		TitledBorder border = BorderFactory.createTitledBorder(label);
 		field.setBorder(border);
-		panel.add(field);
+		buttonPanel.add(field);
 	}
 
 	private void updateRows() {
