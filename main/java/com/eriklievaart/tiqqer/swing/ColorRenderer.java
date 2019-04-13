@@ -18,17 +18,16 @@ public class ColorRenderer implements TableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int col) {
+	public Component getTableCellRendererComponent(JTable t, Object o, boolean selected, boolean focus, int r, int c) {
 
-		JLabel label = new JLabel(value.toString());
+		JLabel label = new JLabel(o.toString());
 		label.setOpaque(true);
-		label.setBackground(Color.BLACK);
-		label.setForeground(getColor(row));
+		label.setBackground(selected ? new Color(0, 80, 0) : Color.BLACK);
+		label.setForeground(getColor(selected, r));
 		return label;
 	}
 
-	private Color getColor(int row) {
+	private Color getColor(boolean selected, int row) {
 		LogRecord record = model.getRow(row);
 		if (record.getLevel() == Level.SEVERE) {
 			return Color.RED;
@@ -40,7 +39,7 @@ public class ColorRenderer implements TableCellRenderer {
 			return Color.GRAY;
 		}
 		if (record.getLevel() == Level.FINER || record.getLevel() == Level.FINEST) {
-			return Color.DARK_GRAY;
+			return selected ? Color.BLACK : Color.DARK_GRAY;
 		}
 		return Color.WHITE;
 	}

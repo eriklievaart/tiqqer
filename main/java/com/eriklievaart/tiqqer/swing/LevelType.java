@@ -29,6 +29,9 @@ public enum LevelType {
 
 		case "ERROR":
 			return ERROR;
+
+		case "SEVERE":
+			return ERROR;
 		}
 		throw new FormattedException("unknown level %", level.toString());
 	}
