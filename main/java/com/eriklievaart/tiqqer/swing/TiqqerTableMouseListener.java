@@ -41,9 +41,9 @@ public class TiqqerTableMouseListener implements MouseListener {
 		List<String> lines = NewCollection.list();
 		lines.add(Str.sub("date: $", new Date(record.getMillis())));
 		lines.add(Str.sub("logger: $", record.getLoggerName()));
-		lines.add(Str.sub("message: $", record.getMessage()));
+		lines.add(Str.sub("\nmessage:\n$", record.getMessage()));
 		if (record.getThrown() != null) {
-			lines.add(Str.sub("exception: $", ThrowableTool.toString(record.getThrown())));
+			lines.add(Str.sub("\n$", ThrowableTool.toString(record.getThrown())));
 		}
 		area.setText(Str.joinLines(lines));
 		tabs.setSelectedIndex(1);

@@ -48,7 +48,6 @@ public class TiqqerUiService implements TiqqerService {
 	private final JComboBox<LevelType> levelBox = new JComboBox<>(LevelType.values());
 	private final JTextField loggerField = new JTextField();
 	private final JTextField messageField = new JTextField();
-	private final JButton updateButton = new JButton("update");
 	private final JButton clearButton = new JButton("clear");
 	private final AtomicReference<Predicate<LogRecord>> predicate = new AtomicReference<>(r -> true);
 
@@ -113,13 +112,15 @@ public class TiqqerUiService implements TiqqerService {
 
 	private void initButtonPanel() {
 		levelBox.setSelectedItem(LevelType.TRACE);
+		levelBox.addActionListener(e -> updatePredicate());
+		loggerField.addActionListener(e -> updatePredicate());
+		messageField.addActionListener(e -> updatePredicate());
+
 		addBorderedField("minimum level", levelBox);
 		addBorderedField("logger", loggerField);
 		addBorderedField("message", messageField);
 
 		clearButton.addActionListener(ae -> clear());
-		updateButton.addActionListener(ae -> updatePredicate());
-		buttonPanel.add(updateButton);
 		buttonPanel.add(clearButton);
 	}
 
