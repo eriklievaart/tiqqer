@@ -101,8 +101,8 @@ public class TiqqerUiService implements TiqqerService {
 		table.addMouseListener(listener);
 		table.setDefaultRenderer(Object.class, new ColorRenderer(model));
 
+		overviewPanel.add(buttonPanel, BorderLayout.NORTH);
 		overviewPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-		overviewPanel.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 	private void clear() {
