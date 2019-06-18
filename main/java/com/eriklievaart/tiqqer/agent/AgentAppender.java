@@ -24,4 +24,8 @@ public class AgentAppender extends AbstractAppender {
 			}
 		});
 	}
+
+	@Override
+	public void close() {
+	}
 }
