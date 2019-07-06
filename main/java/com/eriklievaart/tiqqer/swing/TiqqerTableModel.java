@@ -52,7 +52,7 @@ public class TiqqerTableModel extends AbstractTableModel {
 		case 1:
 			return record.getLoggerName();
 		case 2:
-			return record.getMessage();
+			return record.getMessage().replaceAll("\\s++", " ");
 		}
 		throw new FormattedException("there is no column %", col);
 	}
