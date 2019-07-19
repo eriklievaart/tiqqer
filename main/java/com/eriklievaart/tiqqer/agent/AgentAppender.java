@@ -15,7 +15,7 @@ public class AgentAppender extends AbstractAppender {
 	}
 
 	@Override
-	public void append(LogRecord record) {
+	public void write(LogRecord record) {
 		clients.allCall(client -> {
 			try {
 				client.publish(record);
