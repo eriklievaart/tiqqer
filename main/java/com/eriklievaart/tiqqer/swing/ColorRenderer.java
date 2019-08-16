@@ -2,6 +2,7 @@ package com.eriklievaart.tiqqer.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -19,8 +20,7 @@ public class ColorRenderer implements TableCellRenderer {
 
 	@Override
 	public Component getTableCellRendererComponent(JTable t, Object o, boolean selected, boolean focus, int r, int c) {
-
-		JLabel label = new JLabel(o.toString());
+		JLabel label = new JLabel(Objects.toString(o));
 		label.setOpaque(true);
 		label.setBackground(selected ? new Color(0, 80, 0) : Color.BLACK);
 		label.setForeground(getColor(selected, r));
