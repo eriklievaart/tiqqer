@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.ws;
+package com.eriklievaart.tiqqer.websocket;
 
 import javax.servlet.Servlet;
 
@@ -8,12 +8,11 @@ import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import com.eriklievaart.osgi.toolkit.api.ActivatorWrapper;
-import com.eriklievaart.toolkit.logging.api.LogTemplate;
+import com.eriklievaart.tiqqer.api.TiqqerService;
 
 public class Activator extends ActivatorWrapper {
 	private static final String HTTP_SERVLET_PATTERN = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN;
-
-	private LogTemplate log = new LogTemplate(getClass());
+	private static final String DEBUG = "com.eriklievaart.tiqqer.web.debug";
 
 	@Override
 	protected void init(BundleContext context) throws Exception {
@@ -22,10 +21,15 @@ public class Activator extends ActivatorWrapper {
 		Thread.currentThread().setContextClassLoader(jettyClassLoader);
 
 		try {
-			addServiceWithCleanup(Servlet.class, new MyWebSocketServlet(), dictionary(HTTP_SERVLET_PATTERN, "/socket"));
+			DebugLogger debug = new DebugLogger(getContextWrapper().getPropertyBoolean(DEBUG, false));
+			LogWebSockets sockets = new LogWebSockets(debug);
+			CreatorWebSocketServlet servlet = new CreatorWebSocketServlet(sockets);
+			addServiceWithCleanup(Servlet.class, servlet, dictionary(HTTP_SERVLET_PATTERN, "/tiqqer-socket"));
+			addServiceWithCleanup(TiqqerService.class, sockets);
 
 		} catch (Exception e) {
-			log.error("unable to start WebSocketServlet", e);
+			e.printStackTrace();
+			throw e;
 
 		} finally {
 			Thread.currentThread().setContextClassLoader(original);

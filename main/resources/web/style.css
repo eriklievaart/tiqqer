@@ -1,0 +1,19 @@
+body {
+	color: grey;
+	background-color: black;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border: 1px solid grey;
+	padding: 4px;
+}
+
+.finest   { color: #222 }
+.fine     { color: #555 }
+.info     { color: #aaa }
+.warning  { color: orange }
+.severe   { color: #f00 }
