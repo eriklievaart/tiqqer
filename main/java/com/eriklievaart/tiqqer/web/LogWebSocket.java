@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.websocket;
+package com.eriklievaart.tiqqer.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,51 +8,42 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.WebSocketListener;
 
 import com.eriklievaart.toolkit.io.api.RuntimeIOException;
 import com.eriklievaart.toolkit.lang.api.collection.ListTool;
 import com.eriklievaart.toolkit.lang.api.str.Str;
 
-@WebSocket
-@SuppressWarnings("unused")
-public class LogWebSocket {
-	private DebugLogger debug;
+public class LogWebSocket implements WebSocketListener {
 
 	private Session session;
+	private DebugLogger debug;
 	private boolean update = true;
 	private boolean disconnected = false;
-	private int buffer = LogWebSockets.DEFAULT_BUFFER;
+	private int buffer = LogWebSocketService.DEFAULT_BUFFER;
 	private CopyOnWriteArrayList<LogRecord> records;
 	private LogFilter filter = new LogFilter();
 
 	public LogWebSocket(List<LogRecord> buffer, DebugLogger debug) {
-		this.debug = debug;
 		this.records = new CopyOnWriteArrayList<>(buffer);
+		this.debug = debug;
 	}
 
-	@OnWebSocketConnect
-	public void onConnect(Session s) {
+	@Override
+	public void onWebSocketConnect(Session connected) {
+		this.session = connected;
 		debug.log("new socket $", getClass().getSimpleName());
-		this.session = s;
 	}
 
-	@OnWebSocketClose
-	public void onClose(Session s, int status, String message) {
+	@Override
+	public void onWebSocketClose(int status, String message) {
 		debug.log("socket closed $", getClass().getSimpleName());
 		disconnected = true;
 		records.clear();
 	}
 
-	public boolean isDisconnected() {
-		return disconnected;
-	}
-
-	@OnWebSocketMessage
-	public void onText(Session s, String input) {
+	@Override
+	public void onWebSocketText(String input) {
 		try {
 			switch (input.trim().replaceFirst("\\W.*", "")) {
 
@@ -75,6 +66,18 @@ public class LogWebSocket {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void onWebSocketError(Throwable arg0) {
+	}
+
+	@Override
+	public void onWebSocketBinary(byte[] arg0, int arg1, int arg2) {
+	}
+
+	public boolean isDisconnected() {
+		return disconnected;
 	}
 
 	private void clear() {

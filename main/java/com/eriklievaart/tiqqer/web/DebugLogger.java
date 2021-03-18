@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.websocket;
+package com.eriklievaart.tiqqer.web;
 
 import com.eriklievaart.toolkit.lang.api.str.Str;
 

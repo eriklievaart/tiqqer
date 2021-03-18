@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.websocket;
+package com.eriklievaart.tiqqer.web;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +8,7 @@ import java.util.logging.LogRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import com.eriklievaart.tiqqer.web.LogFilter;
 import com.eriklievaart.toolkit.lang.api.check.Check;
 
 public class LogFilterU {

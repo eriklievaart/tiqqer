@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.websocket;
+package com.eriklievaart.tiqqer.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
