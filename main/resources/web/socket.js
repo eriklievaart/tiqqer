@@ -42,11 +42,11 @@ ws.onmessage = function(raw){
 	if(lines != "") {
 
 		for (var line of raw.data.split("\n")) {
-			cells = line.split(',', 3);
+			cells = line.split(',');
 			trs += '<tr class="' + cells[0].toLowerCase() + '">';
 			trs += '<td>' + cells[0] + '</td>'
 			trs += '<td>' + shorten(cells[1]) + '</td>'
-			trs += '<td>' + cells[2] + '</td>'
+			trs += '<td>' + line.replace(/[^,]*,[^,]*,/, '') + '</td>'
 			trs += '</tr>';
 		}
 	}
