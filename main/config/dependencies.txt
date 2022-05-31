@@ -1,6 +1,6 @@
 
 [bundle]
-jl-bundle @local @snapshot
+jl-core @local @snapshot
 osgi-logging @local @snapshot
 osgi-status @local @snapshot
 osgi-toolkit @local @snapshot

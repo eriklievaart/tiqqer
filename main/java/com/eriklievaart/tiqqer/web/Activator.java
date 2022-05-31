@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.osgi.framework.BundleContext;
 
-import com.eriklievaart.jl.bundle.api.osgi.LightningActivator;
-import com.eriklievaart.jl.bundle.api.page.PageSecurity;
-import com.eriklievaart.jl.bundle.api.websocket.WebSocketService;
+import com.eriklievaart.jl.core.api.osgi.LightningActivator;
+import com.eriklievaart.jl.core.api.page.PageSecurity;
+import com.eriklievaart.jl.core.api.websocket.WebSocketService;
 import com.eriklievaart.osgi.toolkit.api.ContextWrapper;
 import com.eriklievaart.tiqqer.api.TiqqerService;
 
