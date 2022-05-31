@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.function.Function;
 
-import com.eriklievaart.javalightning.bundle.api.ResponseBuilder;
-import com.eriklievaart.javalightning.bundle.api.page.PageController;
-import com.eriklievaart.javalightning.bundle.api.render.InputStreamRenderer;
+import com.eriklievaart.jl.bundle.api.ResponseBuilder;
+import com.eriklievaart.jl.bundle.api.page.PageController;
+import com.eriklievaart.jl.bundle.api.render.InputStreamRenderer;
 import com.eriklievaart.toolkit.io.api.RuntimeIOException;
 
 public class StaticPageControllerFactory {

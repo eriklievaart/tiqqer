@@ -1,6 +1,6 @@
 
 [bundle]
-javalightning-bundle @local @snapshot
+jl-bundle @local @snapshot
 osgi-logging @local @snapshot
 osgi-status @local @snapshot
 osgi-toolkit @local @snapshot
