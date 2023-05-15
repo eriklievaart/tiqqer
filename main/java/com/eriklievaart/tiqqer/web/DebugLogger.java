@@ -12,7 +12,7 @@ public class DebugLogger {
 
 	public void log(String message) {
 		if (enabled) {
-			System.out.println(message);
+			System.out.println("@tiqqer@ " + message);
 		}
 	}
 

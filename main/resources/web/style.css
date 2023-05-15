@@ -12,8 +12,8 @@ td, th {
 	padding: 4px;
 }
 
-.finest   { color: #222 }
-.fine     { color: #555 }
+.finest   { color: #555 }
+.fine     { color: #777 }
 .info     { color: #aaa }
 .warning  { color: orange }
 .severe   { color: #f00 }

@@ -31,8 +31,8 @@ public class LogWebSocket implements WebSocketListener {
 
 	@Override
 	public void onWebSocketConnect(Session connected) {
+		debug.log("socket opened $", getClass().getSimpleName());
 		this.session = connected;
-		debug.log("new socket $", getClass().getSimpleName());
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class LogWebSocket implements WebSocketListener {
 
 		ArrayList<LogRecord> clone = new ArrayList<>(records);
 		List<String> lines = ListTool.map(filter.filter(clone), r -> {
-			return Str.sub("$,$,$", r.getLevel(), r.getLoggerName(), r.getMessage());
+			return Str.sub("$,$,$", r.getLevel(), r.getLoggerName(), HtmlMessage.format(r.getMessage()));
 		});
 		debug.log("returning $ out of $ records", lines.size(), clone.size());
 		session.getRemote().sendString(Str.joinLines(lines));
