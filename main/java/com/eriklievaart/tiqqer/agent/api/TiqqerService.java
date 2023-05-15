@@ -1,4 +1,4 @@
-package com.eriklievaart.tiqqer.api;
+package com.eriklievaart.tiqqer.agent.api;
 
 import java.util.logging.LogRecord;
 

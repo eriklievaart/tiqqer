@@ -8,7 +8,7 @@ import com.eriklievaart.jl.core.api.osgi.LightningActivator;
 import com.eriklievaart.jl.core.api.page.PageSecurity;
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
 import com.eriklievaart.osgi.toolkit.api.ContextWrapper;
-import com.eriklievaart.tiqqer.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.TiqqerService;
 
 public class Activator extends LightningActivator {
 	private static final String HOT_DEPLOYMENT_DIR = "com.eriklievaart.tiqqer.web.hot";

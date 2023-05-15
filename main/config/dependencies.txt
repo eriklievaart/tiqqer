@@ -1,7 +1,7 @@
 
 [bundle]
 jl-core @local @snapshot
-osgi-logging @local @snapshot
+osgi-appender @local @snapshot
 osgi-status @local @snapshot
 osgi-toolkit @local @snapshot
 toolkit-convert @local @snapshot

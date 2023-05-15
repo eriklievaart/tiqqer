@@ -128,8 +128,6 @@ public class LogWebSocket implements WebSocketListener {
 		if (!update) {
 			return;
 		}
-		debug.log("fetching log lines");
-
 		ArrayList<LogRecord> clone = new ArrayList<>(records);
 		List<String> lines = ListTool.map(filter.filter(clone), r -> {
 			return Str.sub("$,$,$", r.getLevel(), r.getLoggerName(), HtmlMessage.format(r.getMessage()));

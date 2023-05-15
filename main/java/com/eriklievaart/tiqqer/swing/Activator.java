@@ -3,7 +3,7 @@ package com.eriklievaart.tiqqer.swing;
 import org.osgi.framework.BundleContext;
 
 import com.eriklievaart.osgi.toolkit.api.ActivatorWrapper;
-import com.eriklievaart.tiqqer.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.TiqqerService;
 
 public class Activator extends ActivatorWrapper {
 

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.logging.LogRecord;
 
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
-import com.eriklievaart.tiqqer.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.TiqqerService;
 import com.eriklievaart.toolkit.lang.api.collection.NewCollection;
 
 public class LogWebSocketService implements WebSocketService, TiqqerService {
