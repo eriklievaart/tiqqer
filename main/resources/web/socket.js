@@ -1,6 +1,33 @@
 
 connecting = false;
 
+function showLogLines(raw) {
+	var trs = '';
+	var lines = raw.split();
+
+	if(lines != "") {
+		for (var line of raw.split("\n")) {
+			cells = line.split(',');
+			if(cells.length < 3) {
+				console.log('invalid line: ' + line);
+				continue;
+			}
+			trs += '<tr id="' + cells[0] + '" class="' + cells[1].toLowerCase() + '">';
+			trs += '<td>' + cells[1] + '</td>'
+			trs += '<td>' + shorten(cells[2]) + '</td>'
+			trs += '<td>' + line.replace(/[^,]*,[^,]*,[^,]*,/, '') + '</td>'
+			trs += '</tr>';
+		}
+	}
+	document.getElementById('tbody').innerHTML = trs;
+	document.getElementById('message').innerHTML = '';
+}
+
+function showDetails(raw) {
+	$('#overlay').html(raw);
+	$('#overlay').show();
+}
+
 function openSocket() {
 	var connected = !(typeof ws === 'undefined' || ws.readyState !== WebSocket.OPEN);
 	if(connected || connecting) {
@@ -20,27 +47,12 @@ function openSocket() {
 		config();
 	};
 
-	ws.onmessage = function(raw){
-		var trs = '';
-		var lines = raw.data.split();
-
-		if(lines != "") {
-
-			for (var line of raw.data.split("\n")) {
-				cells = line.split(',');
-				if(cells.length < 3) {
-					console.log('invalid line: ' + line);
-					continue;
-				}
-				trs += '<tr class="' + cells[0].toLowerCase() + '">';
-				trs += '<td>' + cells[0] + '</td>'
-				trs += '<td>' + shorten(cells[1]) + '</td>'
-				trs += '<td>' + line.replace(/[^,]*,[^,]*,/, '') + '</td>'
-				trs += '</tr>';
-			}
+	ws.onmessage = function(message){
+		if(message.data.startsWith('details')) {
+			showDetails(message.data.replace(/\S+\s+/, ''));
+		} else {
+			showLogLines(message.data);
 		}
-		document.getElementById('tbody').innerHTML = trs;
-		document.getElementById('message').innerHTML = '';
 	};
 
 	ws.onclose = function() {
@@ -49,7 +61,7 @@ function openSocket() {
 }
 
 function config() {
-	if (typeof ws !== 'undefined') {
+	if (typeof ws !== 'undefined' && ws.readyState === WebSocket.OPEN) {
 		var lvl = document.getElementById('lvl').value;
 		var clz = document.getElementById('clz').value;
 		var msg = document.getElementById('msg').value;
@@ -83,4 +95,39 @@ function shorten(name) {
 openSocket();
 setInterval(fetch, 100);
 setInterval(openSocket, 5000);
+
+
+$('#log').on('contextmenu', 'tr', function(e) {
+	if(typeof ws === 'undefined' || ws.readyState !== WebSocket.OPEN) {
+		alert('not connected');
+		return;
+	}
+	ws.send('details ' + this.id);
+	e.preventDefault();
+});
+
+document.getElementById("overlay").addEventListener('contextmenu', function(e) {
+	$(this).hide();
+	e.preventDefault();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

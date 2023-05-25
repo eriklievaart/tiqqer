@@ -10,12 +10,14 @@ import com.eriklievaart.jl.core.api.ResponseBuilder;
 import com.eriklievaart.jl.core.api.page.PageController;
 import com.eriklievaart.jl.core.api.render.InputStreamRenderer;
 import com.eriklievaart.toolkit.io.api.RuntimeIOException;
+import com.eriklievaart.toolkit.logging.api.LogTemplate;
 
-public class StaticPageControllerFactory {
+public class StaticsControllerFactory {
+	private LogTemplate log = new LogTemplate(getClass());
 
 	private final Function<String, PageController> function;
 
-	public StaticPageControllerFactory(File hot) {
+	public StaticsControllerFactory(File hot) {
 		if (hot == null) {
 			function = resource -> createController(getClass().getResourceAsStream(resource));
 
@@ -32,7 +34,7 @@ public class StaticPageControllerFactory {
 
 	private PageController hotOrFallback(File root, String resource) throws FileNotFoundException {
 		File hot = new File(root, resource);
-		System.out.println("hot file " + hot + " exists=" + hot.exists());
+		log.debug("hot file $  exists=$", hot, hot.exists());
 		if (hot.exists()) {
 			return createController(new FileInputStream(hot));
 		} else {
@@ -41,6 +43,7 @@ public class StaticPageControllerFactory {
 	}
 
 	public PageController createController(String resource) {
+		log.debug("using template: $", resource);
 		return function.apply(resource);
 	}
 

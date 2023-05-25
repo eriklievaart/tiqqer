@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import com.eriklievaart.toolkit.lang.api.check.Check;
+import com.eriklievaart.toolkit.lang.api.collection.Box2;
 import com.eriklievaart.toolkit.lang.api.str.Str;
 
 public class LogFilter {
@@ -40,6 +41,10 @@ public class LogFilter {
 		message = value;
 	}
 
+	boolean test(Box2<Integer, LogRecord> box) {
+		return test(box.getValue());
+	}
+
 	boolean test(LogRecord record) {
 		if (!Str.isBlank(clazz) && !record.getLoggerName().contains(clazz)) {
 			return false;
@@ -50,7 +55,7 @@ public class LogFilter {
 		return record.getLevel().intValue() >= filterLevel;
 	}
 
-	public List<LogRecord> filter(List<LogRecord> records) {
+	public List<Box2<Integer, LogRecord>> filter(List<Box2<Integer, LogRecord>> records) {
 		Check.notNull(records);
 		return filterFromEnd(records, this::test);
 	}

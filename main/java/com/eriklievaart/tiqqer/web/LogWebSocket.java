@@ -11,20 +11,25 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 
 import com.eriklievaart.toolkit.io.api.RuntimeIOException;
+import com.eriklievaart.toolkit.lang.api.ThrowableTool;
+import com.eriklievaart.toolkit.lang.api.collection.Box2;
 import com.eriklievaart.toolkit.lang.api.collection.ListTool;
 import com.eriklievaart.toolkit.lang.api.str.Str;
+import com.eriklievaart.toolkit.lang.api.str.StringBuilderWrapper;
+import com.eriklievaart.toolkit.logging.api.LogTemplate;
 
 public class LogWebSocket implements WebSocketListener {
+	private LogTemplate log = new LogTemplate(getClass());
 
 	private Session session;
 	private DebugLogger debug;
 	private boolean update = true;
 	private boolean disconnected = false;
 	private int buffer = LogWebSocketService.DEFAULT_BUFFER;
-	private CopyOnWriteArrayList<LogRecord> records;
+	private CopyOnWriteArrayList<Box2<Integer, LogRecord>> records;
 	private LogFilter filter = new LogFilter();
 
-	public LogWebSocket(List<LogRecord> buffer, DebugLogger debug) {
+	public LogWebSocket(List<Box2<Integer, LogRecord>> buffer, DebugLogger debug) {
 		this.records = new CopyOnWriteArrayList<>(buffer);
 		this.debug = debug;
 	}
@@ -51,6 +56,10 @@ public class LogWebSocket implements WebSocketListener {
 				fetch();
 				break;
 
+			case "details":
+				details(Integer.parseInt(input.replaceFirst("\\S++\\s++", "")));
+				break;
+
 			case "clear":
 				clear();
 				break;
@@ -60,6 +69,7 @@ public class LogWebSocket implements WebSocketListener {
 				break;
 
 			default:
+				log.warn("unrecognized command %", input);
 				throw new RuntimeException("unrecognized command: " + input);
 			}
 
@@ -128,16 +138,41 @@ public class LogWebSocket implements WebSocketListener {
 		if (!update) {
 			return;
 		}
-		ArrayList<LogRecord> clone = new ArrayList<>(records);
-		List<String> lines = ListTool.map(filter.filter(clone), r -> {
-			return Str.sub("$,$,$", r.getLevel(), r.getLoggerName(), HtmlMessage.format(r.getMessage()));
+		ArrayList<Box2<Integer, LogRecord>> clone = new ArrayList<>(records);
+		List<String> lines = ListTool.map(filter.filter(clone), b -> {
+			LogRecord r = b.getValue();
+			return Str.sub("$,$,$,$", b.getKey(), r.getLevel(), r.getLoggerName(), HtmlMessage.format(r.getMessage()));
 		});
 		debug.log("returning $ out of $ records", lines.size(), clone.size());
 		session.getRemote().sendString(Str.joinLines(lines));
 		update = false;
 	}
 
-	public void update(LogRecord record) throws IOException {
+	private void details(int id) throws IOException {
+		log.debug("requested details of record: " + id);
+		for (Box2<Integer, LogRecord> box : records) {
+			if (box.getKey() == id) {
+				log.trace("found record $ -> $ $", id, box.getValue().getLoggerName(), box.getValue().getMessage());
+				session.getRemote().sendString(getDetailMessage(box.getValue()));
+			}
+		}
+	}
+
+	private String getDetailMessage(LogRecord r) {
+		StringBuilderWrapper builder = new StringBuilderWrapper();
+
+		builder.append("details: ");
+		builder.append("level: ").append(r.getLevel()).append("<br/>");
+		builder.append("logger: ").append(r.getLoggerName()).append("<br/>");
+		builder.append("\nmessage:").append("<pre>").append(r.getMessage()).append("</pre>");
+
+		if (r.getThrown() != null) {
+			builder.append("throwable:").append("<pre>").append(ThrowableTool.toString(r.getThrown())).append("</pre>");
+		}
+		return builder.toString();
+	}
+
+	public void update(Box2<Integer, LogRecord> record) throws IOException {
 		if (!disconnected) {
 			records.add(record);
 			if (records.size() > buffer) {

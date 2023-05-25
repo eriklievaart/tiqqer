@@ -7,13 +7,16 @@ import java.util.logging.LogRecord;
 
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
 import com.eriklievaart.tiqqer.agent.api.TiqqerService;
+import com.eriklievaart.toolkit.lang.api.IdGenerator;
+import com.eriklievaart.toolkit.lang.api.collection.Box2;
 import com.eriklievaart.toolkit.lang.api.collection.NewCollection;
 
 public class LogWebSocketService implements WebSocketService, TiqqerService {
 	public static final int DEFAULT_BUFFER = 10000;
 
+	private IdGenerator id = new IdGenerator();
 	private final DebugLogger debug;
-	private final List<LogRecord> buffer = NewCollection.concurrentList();
+	private final List<Box2<Integer, LogRecord>> buffer = NewCollection.concurrentList();
 	private final List<LogWebSocket> sockets = NewCollection.concurrentList();
 
 	public LogWebSocketService(DebugLogger debug) {
@@ -36,15 +39,16 @@ public class LogWebSocketService implements WebSocketService, TiqqerService {
 
 	@Override
 	public void publish(LogRecord record) {
-		buffer.add(record);
+		Box2<Integer, LogRecord> box = new Box2<>(id.nextInt(), record);
+		buffer.add(box);
 		if (buffer.size() > DEFAULT_BUFFER) {
 			buffer.remove(0);
 		}
 		removeDeadSockets();
-		sendUpdate(record);
+		sendUpdate(box);
 	}
 
-	private void sendUpdate(LogRecord record) {
+	private void sendUpdate(Box2<Integer, LogRecord> record) {
 		for (LogWebSocket socket : sockets) {
 			try {
 				socket.update(record);

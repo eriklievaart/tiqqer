@@ -1,8 +1,11 @@
+<!DOCTYPE html>
 <html>
 <head>
  <link rel="stylesheet" media="screen" href="/tiqqer/style.css"/>
 </head>
 <body>
+
+<div id="overlay"></div>
 
 <form onsubmit="config(); return false;">
 	level
@@ -24,7 +27,7 @@
 	<input type="submit" onclick="cls();" value="clear log">
 </form>
 
-<table>
+<table id="log">
 	<thead>
 		<tr>
 			<th>level</th>
@@ -38,6 +41,7 @@
 
 <div id="message"></div>
 
+<script src="/tiqqer/jquery.js"></script>
 <script src="/tiqqer/socket.js"></script>
 
 </body>

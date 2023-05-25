@@ -1,6 +1,12 @@
 body {
 	color: grey;
 	background-color: black;
+	margin: 0px;
+	padding: 0px;
+}
+
+form {
+	padding: 10px 0px;
 }
 
 table {
@@ -10,6 +16,19 @@ table {
 td, th {
 	border: 1px solid grey;
 	padding: 4px;
+}
+
+#overlay {
+	background: #aaa;
+	color: black;
+	position: fixed;
+	min-width: 100%;
+	min-height: 100%;
+	width: 100%;
+	height: 100%;
+	display: none;
+	padding: 10px;
+	overflow: auto;
 }
 
 .finest   { color: #555 }
