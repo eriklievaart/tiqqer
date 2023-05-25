@@ -107,7 +107,7 @@ $('#log').on('contextmenu', 'tr', function(e) {
 });
 
 document.getElementById("overlay").addEventListener('contextmenu', function(e) {
-	$(this).hide();
+	this.style = 'display:none;';
 	e.preventDefault();
 });
 
