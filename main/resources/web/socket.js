@@ -80,6 +80,7 @@ function shorten(name) {
 }
 
 
+openSocket();
 setInterval(fetch, 100);
 setInterval(openSocket, 5000);
 

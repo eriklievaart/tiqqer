@@ -7,7 +7,6 @@ import org.osgi.framework.BundleContext;
 import com.eriklievaart.jl.core.api.osgi.LightningActivator;
 import com.eriklievaart.jl.core.api.page.PageSecurity;
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
-import com.eriklievaart.osgi.toolkit.api.ContextWrapper;
 import com.eriklievaart.tiqqer.agent.api.TiqqerService;
 
 public class Activator extends LightningActivator {
@@ -26,8 +25,7 @@ public class Activator extends LightningActivator {
 		addServiceWithCleanup(WebSocketService.class, service);
 		addServiceWithCleanup(TiqqerService.class, service);
 
-		ContextWrapper wrapper = getContextWrapper(); // line required for osgi import
-		String property = wrapper.getPropertyString(HOT_DEPLOYMENT_DIR, null);
+		String property = getContextWrapper().getPropertyString(HOT_DEPLOYMENT_DIR, null);
 		File hot = property == null ? null : new File(property);
 		registerRoutes(hot);
 	}
