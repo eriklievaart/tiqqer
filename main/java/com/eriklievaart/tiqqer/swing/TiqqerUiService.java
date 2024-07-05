@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import com.eriklievaart.tiqqer.agent.api.TiqqerService;
+import com.eriklievaart.tiqqer.swing.api.TiqqerFrame;
 import com.eriklievaart.toolkit.lang.api.collection.FromCollection;
 import com.eriklievaart.toolkit.lang.api.collection.ListTool;
 import com.eriklievaart.toolkit.lang.api.collection.NewCollection;
@@ -33,7 +34,7 @@ import com.eriklievaart.toolkit.lang.api.str.Str;
 import com.eriklievaart.toolkit.swing.api.SwingThread;
 import com.eriklievaart.toolkit.swing.api.builder.JFrameBuilder;
 
-public class TiqqerUiService implements TiqqerService {
+public class TiqqerUiService implements TiqqerService, TiqqerFrame {
 	private static final int UI_BUFFER = 1_000;
 	private static final int LOG_BUFFER = 1_000_000;
 
@@ -64,6 +65,7 @@ public class TiqqerUiService implements TiqqerService {
 		updateRows();
 	}
 
+	@Override
 	public void show() {
 		SwingThread.invokeLater(() -> {
 			initOverviewPanel();
