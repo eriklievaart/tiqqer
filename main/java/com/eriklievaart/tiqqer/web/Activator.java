@@ -7,7 +7,7 @@ import org.osgi.framework.BundleContext;
 import com.eriklievaart.jl.core.api.osgi.LightningActivator;
 import com.eriklievaart.jl.core.api.page.PageSecurity;
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
-import com.eriklievaart.tiqqer.agent.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.LogRecordListenerService;
 import com.eriklievaart.toolkit.logging.api.LogTemplate;
 
 public class Activator extends LightningActivator {
@@ -26,7 +26,7 @@ public class Activator extends LightningActivator {
 
 		LogWebSocketService service = new LogWebSocketService(logger);
 		addServiceWithCleanup(WebSocketService.class, service);
-		addServiceWithCleanup(TiqqerService.class, service);
+		addServiceWithCleanup(LogRecordListenerService.class, service);
 
 		String property = getContextWrapper().getPropertyString(HOT_DEPLOYMENT_DIR, null);
 		File hot = property == null ? null : new File(property);

@@ -110,24 +110,3 @@ document.getElementById("overlay").addEventListener('contextmenu', function(e) {
 	this.style = 'display:none;';
 	e.preventDefault();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

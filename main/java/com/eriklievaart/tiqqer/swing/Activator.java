@@ -3,7 +3,7 @@ package com.eriklievaart.tiqqer.swing;
 import org.osgi.framework.BundleContext;
 
 import com.eriklievaart.osgi.toolkit.api.ActivatorWrapper;
-import com.eriklievaart.tiqqer.agent.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.LogRecordListenerService;
 import com.eriklievaart.tiqqer.swing.api.TiqqerFrame;
 
 public class Activator extends ActivatorWrapper {
@@ -14,7 +14,7 @@ public class Activator extends ActivatorWrapper {
 	@Override
 	protected void init(BundleContext context) throws Exception {
 		addServiceWithCleanup(TiqqerFrame.class, service);
-		addServiceWithCleanup(TiqqerService.class, service);
+		addServiceWithCleanup(LogRecordListenerService.class, service);
 
 		if (getContextWrapper().getPropertyString(SHOW, "true").equals("true")) {
 			service.show();

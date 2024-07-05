@@ -1,9 +1,9 @@
 
 [bundle]
 jl-core @local @snapshot
-osgi-appender @local @snapshot
 osgi-status @local @snapshot
 osgi-toolkit @local @snapshot
+tiqqer-agent @local @snapshot
 toolkit-convert @local @snapshot
 toolkit-io @local @snapshot
 toolkit-lang @local @snapshot

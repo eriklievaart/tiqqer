@@ -1,4 +1,3 @@
 
 [import]
 com.eriklievaart.osgi.toolkit.api
-

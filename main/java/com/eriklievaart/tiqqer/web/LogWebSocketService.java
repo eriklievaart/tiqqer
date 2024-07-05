@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 import java.util.logging.LogRecord;
 
 import com.eriklievaart.jl.core.api.websocket.WebSocketService;
-import com.eriklievaart.tiqqer.agent.api.TiqqerService;
+import com.eriklievaart.tiqqer.agent.api.LogRecordListenerService;
 import com.eriklievaart.toolkit.lang.api.IdGenerator;
 import com.eriklievaart.toolkit.lang.api.collection.Box2;
 import com.eriklievaart.toolkit.lang.api.collection.NewCollection;
 
-public class LogWebSocketService implements WebSocketService, TiqqerService {
+public class LogWebSocketService implements WebSocketService, LogRecordListenerService {
 	public static final int DEFAULT_BUFFER = 10000;
 
 	private IdGenerator id = new IdGenerator();
