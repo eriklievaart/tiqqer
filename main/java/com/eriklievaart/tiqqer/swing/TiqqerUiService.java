@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.logging.LogRecord;
@@ -38,6 +39,7 @@ public class TiqqerUiService implements LogRecordListenerService, TiqqerFrame {
 	private static final int UI_BUFFER = 1_000;
 	private static final int LOG_BUFFER = 1_000_000;
 
+	private final AtomicBoolean paused = new AtomicBoolean(false);
 	private final List<LogRecord> records = NewCollection.concurrentList();
 	private final JFrame frame = new JFrameBuilder("tiqqer").title("tiqqer").create();
 	private final JTabbedPane tabs = new JTabbedPane();
@@ -49,6 +51,7 @@ public class TiqqerUiService implements LogRecordListenerService, TiqqerFrame {
 	private final JComboBox<LevelType> levelBox = new JComboBox<>(LevelType.values());
 	private final JTextField loggerField = new JTextField();
 	private final JTextField messageField = new JTextField();
+	private final JButton pauseButton = new JButton("pause");
 	private final JButton clearButton = new JButton("clear");
 	private final AtomicReference<Predicate<LogRecord>> predicate = new AtomicReference<>(r -> true);
 
@@ -58,6 +61,9 @@ public class TiqqerUiService implements LogRecordListenerService, TiqqerFrame {
 
 	@Override
 	public void publish(LogRecord record) {
+		if (paused.get()) {
+			return;
+		}
 		records.add(record);
 		if (records.size() > LOG_BUFFER) {
 			records.remove(0);
@@ -107,6 +113,15 @@ public class TiqqerUiService implements LogRecordListenerService, TiqqerFrame {
 		overviewPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
+	private void pause() {
+		paused.set(!paused.get());
+		if (paused.get()) {
+			frame.setTitle("tiqqer @PAUSED@");
+		} else {
+			frame.setTitle("tiqqer");
+		}
+	}
+
 	private void clear() {
 		records.clear();
 		updateRows();
@@ -122,6 +137,8 @@ public class TiqqerUiService implements LogRecordListenerService, TiqqerFrame {
 		addBorderedField("logger", loggerField);
 		addBorderedField("message", messageField);
 
+		pauseButton.addActionListener(ae -> pause());
+		buttonPanel.add(pauseButton);
 		clearButton.addActionListener(ae -> clear());
 		buttonPanel.add(clearButton);
 	}
